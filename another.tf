@@ -79,9 +79,11 @@ resource "aws_s3_bucket_versioning" "versioning_example" {
   }
 }
 
-logging {
-    target_bucket = "class30111kops"  # Update with your desired logs bucket name
-    target_prefix = "s3-logs/"
+resource "aws_s3_bucket_logging" "example" {
+  bucket = aws_s3_bucket.example.id
+
+  target_bucket = "class30111kops"  # Update with your desired logs bucket name
+  target_prefix = "s3-logs/"
 }
 
 resource "aws_kms_key" "my_kms_key" {
