@@ -3,10 +3,10 @@ name: 'Terraform - Production'
 on:
   push:
     branches:
-    - main
+    - DEV
   pull_request:
     branches:
-    - main
+    - DEV
 
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY }}
