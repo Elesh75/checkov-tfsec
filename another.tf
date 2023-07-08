@@ -5,7 +5,15 @@ provider "aws" {
 resource "aws_instance" "web" {
   instance_type = "t2.micro"
   ami = data.aws_ami.amzlinux2.id
-
+  
+  metadata_options {
+   http_tokens = "required"
+  }
+  
+  root_block_device {
+    encrypted = true
+  }
+  
 }
 
 resource "aws_vpc" "demo_vpc" {
@@ -28,7 +36,10 @@ resource "aws_launch_configuration" "my_web_config" {
   name = "my_web_config"
   image_id = data.aws_ami.amzlinux2.id
   instance_type = "t2.micro"
-
+  
+  metadata_options {
+   http_tokens = "required"
+  }
 }
 
 data "aws_ami" "amzlinux2" {
@@ -53,6 +64,36 @@ data "aws_ami" "amzlinux2" {
 }
 
 resource "aws_s3_bucket" "my_bucket" {
-  bucket = "<your-bucket-name>"
+  bucket = "class301111"
+  acl = "private"
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
+versioning {
+    enabled = true
+  }
+
+logging {
+    target_bucket = "class30111kops"  # Update with your desired logs bucket name
+    target_prefix = "s3-logs/"
+}
+
+resource "aws_kms_key" "my_kms_key" {
+  description             = "KMS key 1 used to encrypt bucket object"
+  deletion_window_in_days = 10
+  enable_key_rotation = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
+  bucket = aws_s3_bucket.mybucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.mykey.arn
+      sse_algorithm     = "aws:kms"
+    }
+  }
+}
