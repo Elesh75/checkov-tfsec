@@ -72,9 +72,12 @@ resource "aws_s3_bucket" "my_bucket" {
   restrict_public_buckets = true
 }
 
-versioning {
-    enabled = true
+resource "aws_s3_bucket_versioning" "versioning_example" {
+  bucket = aws_s3_bucket.example.id
+  versioning_configuration {
+    status = "Enabled"
   }
+}
 
 logging {
     target_bucket = "class30111kops"  # Update with your desired logs bucket name
