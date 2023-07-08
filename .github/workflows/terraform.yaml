@@ -81,7 +81,7 @@ jobs:
         uses: bridgecrewio/checkov-action@master
         with:
             directory: .
-            soft_fail: true  # this means if our code fails the test checkov shouldn't destroy/kill our process intead just prompt us and stop the process
+            soft_fail: true  # this means if our code fails the test checkov shouldn't destroy/kill our process intead just list the error for us and stop the process
             framework: terraform
 
       - name: Run Checkov
