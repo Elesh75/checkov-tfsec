@@ -65,16 +65,16 @@ data "aws_ami" "amzlinux2" {
 
 resource "aws_s3_bucket" "my_bucket" {
   bucket = "class301111"
-  acl = "private"
+ }
  
 resource "aws_s3_bucket_public_access_block" "my_bucket" {
+  
   bucket = aws_s3_bucket.my_bucket.id 
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
  }
-} 
 
 resource "aws_s3_bucket_versioning" "my_bucket" {
   bucket = aws_s3_bucket.my_bucket.id
