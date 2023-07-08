@@ -20,6 +20,13 @@ resource "aws_vpc" "demo_vpc" {
   cidr_block = "10.0.0.0/16"
 }
 
+resource "aws_flow_log" "example" {
+  iam_role_arn    = aws_iam_role.example.arn
+  log_destination = aws_cloudwatch_log_group.example.arn
+  traffic_type    = "ALL"
+  vpc_id          = aws_vpc.demo_vpc.id
+}
+
 resource "aws_autoscaling_group" "my_asg" {
   availability_zones        = ["us-west-1a"]
   name                      = "my_asg"
@@ -40,6 +47,11 @@ resource "aws_launch_configuration" "my_web_config" {
   metadata_options {
    http_tokens = "required"
   }
+
+  
+  root_block_device {
+    encrypted = true
+  } 
 }
 
 data "aws_ami" "amzlinux2" {
@@ -64,7 +76,7 @@ data "aws_ami" "amzlinux2" {
 }
 
 resource "aws_s3_bucket" "my_bucket" {
-  bucket = "class301111"
+  bucket = "aws_s3_bucket.my_bucket.id"
  }
  
 resource "aws_s3_bucket_public_access_block" "my_bucket" {
